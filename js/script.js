@@ -1,12 +1,14 @@
 //select the div with a class of overview
 const overview = document.querySelector(".overview");
 const username = "millead";
+const repoList = document.querySelector(".repo-list");
+
+
 
 //fetch API and JSON data
 const getData = async function () {
   const res = await fetch(`https://api.github.com/users/${username}`);
   const data = await res.json();
-  console.log(data);
   displayInfo(data);
 };
 getData();
@@ -27,4 +29,25 @@ const displayInfo = function (data) {
       <p><strong>Number of public repos:</strong> ${data.public_repos}</p>
     </div>;`;
   overview.append(userInfoDiv);
+  getRepos();
 };
+
+//Fetch you Repos frrom provided list repositories of User
+
+const getRepos = async function () {
+    const res = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
+    const repoData= await res.json()
+    repoInfo(repoData);
+};
+
+
+//display info about your repos
+const repoInfo = function (repos) {
+    for (const repo of repos) {
+    const repoItem = document.createElement("li");
+    repoItem.classList.add("repo");
+    repoItem.innerHTML = `<h3>${repo.name}</h3>`;
+    repoList.append(repoItem)
+    }
+};
+ 
